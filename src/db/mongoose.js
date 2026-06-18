@@ -1,7 +1,8 @@
-import mongoose from 'mongoose'
+import mongoose from "mongoose";
+mongoose.connect("mongodb://127.0.0.1:27017/Teachers-Management-System").then(() => {
+    console.log("you are connected to database successfully");
+  })
+  .catch((e) => {
+    console.log(e, "connection to database failed");
+  });
 
-mongoose.connect('mongodb://127.0.0.1:27017/Computer-Api').then(()=>{
-    console.log("You are connected to mongodb");
-}).catch((e)=>{
-    console.log("Failed to connect to MongoDB", e);
-})

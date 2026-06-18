@@ -1,17 +1,31 @@
-import express from 'express';
-import './db/mongoose.js';
-import studentRouter from './routers/studentRoute.js';
+import express, { json } from "express";
+import "./db/mongoose.js";
+import { router as userRouter } from "./router/user.js";
+import { router as taskRouter } from "./router/task.js";
 
 const app = express();
 const port = process.env.PORT || 3000;
 
-// Middleware
+// app.use((req,res,next) => {
+//   if(req.method === "GET") {
+//     res.send("Get is disabled");
+//   } else {
+//     next();
+//   }
+// })
+
+// app.use((req,res,next) => {
+//   res.status(503).send("Site is currently down. Check back soon!")
+// })
+
 app.use(express.json());
 
-// Routes
-app.use(studentRouter);
+app.use(userRouter);
+app.use(taskRouter);
 
-// Start server
 app.listen(port, () => {
-    console.log(`Server is running on port ${port}`);
+  console.log("the app is listening to the port of " + port);
 });
+
+
+
