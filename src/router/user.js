@@ -2,7 +2,6 @@ import express from "express";
 import { User } from "../model/student.js";
 import { auth } from "../middleware/auth.js";
 
-
 export const router = new express.Router();
 
 // Create User or sign up
@@ -12,7 +11,7 @@ router.post("/users", async (req, res) => {
   try {
     await user.save();
     const token = await user.generateAuthToken();
-    res.status(201).send({user,token});
+    res.status(201).send({ user, token });
   } catch (e) {
     res.status(400).send({
       error: e.message,
@@ -28,15 +27,37 @@ router.post("/users/login", async (req, res) => {
       req.body.email,
       req.body.password,
     );
-  const token = await user.generateAuthToken();
-    res.status(200).send({user,token});
+    const token = await user.generateAuthToken();
+    res.status(200).send({ user, token });
   } catch (e) {
     res.status(400).send({ Error: e.message });
   }
 });
+router.post("/users/logout",auth, async (req, res) => {
+  try {
+    req.user.tokens = req.user.tokens.filter((token) => {
+      return token.token !== req.token
+    })
+    await req.user.save();
+    res.status(200).send()
+  } catch (e) {
+    res.status(500).send({ Error: e.message });
+  }
+});
+//LoggOURll
+router.post("/users/logoutAll", auth, async (req,res) =>{
+  try {
+    req.user.tokens = [];
+    await req.user.save();
+    res.status(200).send();
+  } catch(e) {
+    res.status(500).send();
+  }
+})
+
 
 // Get All Users
-router.get("/users/me",auth, async (req, res) => {
+router.get("/users/me", auth, async (req, res) => {
   res.send(req.user);
   // try {
   //   const users = await User.find({});
