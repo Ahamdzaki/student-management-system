@@ -1,13 +1,11 @@
 import express from "express";
 import { Task } from "../model/task.js";
 
-export const router = express.Router();
+export const router = new express.Router();
 
-//post tasks
 router.post("/tasks", async (req, res) => {
-  const tasks = new Task(req.body);
-
   try {
+    const tasks = new Task(req.body);
     await tasks.save();
     res.status(201).send(tasks);
   } catch (e) {
@@ -17,7 +15,6 @@ router.post("/tasks", async (req, res) => {
   }
 });
 
-//get All tasks
 router.get("/tasks", async (req, res) => {
   try {
     const tasks = await Task.find({});
@@ -29,49 +26,44 @@ router.get("/tasks", async (req, res) => {
   }
 });
 
-//get one task
 router.get("/tasks/:id", async (req, res) => {
-  const _id = req.params.id;
-
   try {
-    const tasks = await Task.findById({ _id });
-    if (!tasks) {
-      return res.status(404).send({ error: "tasks not found" });
+    const task = await Task.findById(req.params.id);
+    if (!task) {
+      return res.status(404).send({
+        error: "Task not found",
+      });
     }
-    res.status(200).send();
+    res.status(200).send(task);
   } catch (e) {
     res.status(400).send({
       error: e.message,
     });
   }
 });
-//update task
-router.patch("/tasks/:id", async (req, res) => {
-  const _id = req.params.id;
 
+router.patch("/tasks/:id", async (req, res) => {
   const updates = Object.keys(req.body);
   const allowedUpdates = ["description", "completed"];
   const isValidOperation = updates.every((update) =>
     allowedUpdates.includes(update),
   );
-
   if (!isValidOperation) {
     return res.status(400).send({
-      error: "Invalid updates!",
+      error: "invalid updates",
     });
   }
 
   try {
-    const task = await Task.findById(_id);
-
+    const task = await Task.findById(req.params.id);
     if (!task) {
-      return res.status(404).send({ error: "Task not found" });
+      return res.status(404).send({
+        error: "task not found",
+      });
     }
-
     updates.forEach((update) => {
       task[update] = req.body[update];
     });
-
     await task.save();
     res.status(200).send(task);
   } catch (e) {
@@ -80,15 +72,13 @@ router.patch("/tasks/:id", async (req, res) => {
     });
   }
 });
-
-//delete task
-
 router.delete("/tasks/:id", async (req, res) => {
-  const _id = req.params.id;
   try {
-    const task = await Task.findByIdAndDelete({ _id });
+    const task = await Task.findByIdAndDelete(req.params.id);
     if (!task) {
-      return res.status(404).send({ error: "task not found" });
+      return res.status(404).send({
+        error: "task not found",
+      });
     }
     res.status(200).send(task);
   } catch (e) {

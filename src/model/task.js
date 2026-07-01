@@ -1,21 +1,13 @@
 import mongoose from "mongoose";
-import validator from "validator";
-
-const taskSchema = new mongoose.Schema(
-  {
-    description: {
-      type: String,
-      required: true,
-      trim: true,
-    },
-    completed: {
-      type: Boolean,
-      default: false,
-    },
+const taskSchema = new mongoose.Schema({
+  description: {
+    type: String,
+    required: true,
+    trim: true,
   },
-  {
-    timestamps: true,
+  completed: {
+    type: Boolean,
+    default: false,
   },
-);
-
+});
 export const Task = mongoose.model("Task", taskSchema);
