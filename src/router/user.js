@@ -75,8 +75,6 @@ router.patch("/users/me", auth, async (req, res) => {
     });
   }
   try {
-   
-    
     updates.forEach((update) => {
       req.user[update] = req.body[update];
     });
@@ -96,12 +94,10 @@ router.delete("/users/me", auth, async (req, res) => {
     res.status(200).send(req.user);
   } catch (e) {
     res.status(500).send({
-      error: e.message
-    })
+      error: e.message,
+    });
   }
-})
-
-
+});
 
 // router.get("/users/me",auth, async (req, res) => {
 //   res.status(200).send(req.user);
@@ -162,7 +158,6 @@ router.delete("/users/me", auth, async (req, res) => {
 //     });
 //   }
 // });
-
 
 // router.delete("/users/:id", async (req, res) => {
 //   try {
